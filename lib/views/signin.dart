@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizmaker/helper/functions.dart';
 import 'package:quizmaker/services/auth.dart';
 import 'package:quizmaker/views/home.dart';
 import 'package:quizmaker/views/signup.dart';
@@ -20,6 +21,7 @@ class _SignInState extends State<SignIn> {
     if (_formKey.currentState.validate()) {
       await authService.singInEmailAndPass(email, password).then((value) {
         if (value.substring(0, 5) != 'Error') {
+          HelperFunctions.saveUserLoggedInDetails(isLoggedIn: true);
           print(value);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => HomePage()));

@@ -30,7 +30,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _isLoggedIn = false;
+  bool _isUserLoggedIn = false;
   @override
   void initState() {
     checkUserLoggedInStatus();
@@ -38,7 +38,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   checkUserLoggedInStatus() async {
-    _isLoggedIn = await HelperFunctions.getUserLoggedInDetails();
+    HelperFunctions.getUserLoggedInDetails().then((value){
+      setState(() {
+        _isUserLoggedIn=value;
+      });
+    });
   }
 
   @override
@@ -50,7 +54,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: myColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: _isLoggedIn ? HomePage() : SignIn(),
+      home: (_isUserLoggedIn ?? false) ? HomePage() : SignIn(),
     );
   }
 }
