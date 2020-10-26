@@ -42,6 +42,7 @@ class _AddQuestionState extends State<AddQuestion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: appBarPages(context, "Add Question"),
         backgroundColor: Colors.transparent,
@@ -54,117 +55,120 @@ class _AddQuestionState extends State<AddQuestion> {
           ? Container(
               child: Center(child: CircularProgressIndicator()),
             )
-          : Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: Column(
-                children: [
-                  TextFormField(
-                    maxLines: 4,
-                    validator: (value) =>
-                        value.isEmpty ? "Enter question" : null,
-                    decoration: InputDecoration(
-                      labelText: 'Question',
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide()),
+          : Form(
+              key: _formKey,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      maxLines: 4,
+                      validator: (value) =>
+                          value.isEmpty ? "Enter question" : null,
+                      decoration: InputDecoration(
+                        labelText: 'Question',
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide()),
+                      ),
+                      onChanged: (value) {
+                        question = value;
+                      },
+                      maxLength: 150,
+                      maxLengthEnforced: true,
                     ),
-                    onChanged: (value) {
-                      question = value;
-                    },
-                    maxLength: 150,
-                    maxLengthEnforced: true,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height / 100),
-                  TextFormField(
-                    validator: (value) =>
-                        value.isEmpty ? "Enter Option1 (Correct One)" : null,
-                    decoration: InputDecoration(
-                      labelText: 'Option1 (Correct One)',
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide()),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    TextFormField(
+                      validator: (value) =>
+                          value.isEmpty ? "Enter Option1 (Correct One)" : null,
+                      decoration: InputDecoration(
+                        labelText: 'Option1 (Correct One)',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide()),
+                      ),
+                      onChanged: (value) {
+                        option1 = value;
+                      },
+                      maxLength: 50,
                     ),
-                    onChanged: (value) {
-                      option1 = value;
-                    },
-                    maxLength: 50,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height / 100),
-                  TextFormField(
-                    validator: (value) =>
-                        value.isEmpty ? "Enter Option2" : null,
-                    decoration: InputDecoration(
-                      labelText: 'Option2',
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide()),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    TextFormField(
+                      validator: (value) =>
+                          value.isEmpty ? "Enter Option2" : null,
+                      decoration: InputDecoration(
+                        labelText: 'Option2',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide()),
+                      ),
+                      onChanged: (value) {
+                        option2 = value;
+                      },
+                      maxLength: 50,
                     ),
-                    onChanged: (value) {
-                      option2 = value;
-                    },
-                    maxLength: 50,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height / 100),
-                  TextFormField(
-                    validator: (value) =>
-                        value.isEmpty ? "Enter Option3" : null,
-                    decoration: InputDecoration(
-                      labelText: 'Option3',
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide()),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    TextFormField(
+                      validator: (value) =>
+                          value.isEmpty ? "Enter Option3" : null,
+                      decoration: InputDecoration(
+                        labelText: 'Option3',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide()),
+                      ),
+                      onChanged: (value) {
+                        option3 = value;
+                      },
+                      maxLength: 50,
                     ),
-                    onChanged: (value) {
-                      option3 = value;
-                    },
-                    maxLength: 50,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height / 100),
-                  TextFormField(
-                    validator: (value) =>
-                        value.isEmpty ? "Enter Option4" : null,
-                    decoration: InputDecoration(
-                      labelText: 'Option4',
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide()),
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    TextFormField(
+                      validator: (value) =>
+                          value.isEmpty ? "Enter Option4" : null,
+                      decoration: InputDecoration(
+                        labelText: 'Option4',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide()),
+                      ),
+                      onChanged: (value) {
+                        option4 = value;
+                      },
+                      maxLength: 50,
                     ),
-                    onChanged: (value) {
-                      option4 = value;
-                    },
-                    maxLength: 50,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height / 100),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: submitButton(
-                              context: context,
-                              text: "Submit",
-                              buttonWith:
-                                  MediaQuery.of(context).size.width / 2.5)),
-                      GestureDetector(
-                          onTap: () {
-                            uploadQuestionData();
-                          },
-                          child: submitButton(
-                              context: context,
-                              text: "Add Question",
-                              buttonWith:
-                                  MediaQuery.of(context).size.width / 2.5)),
-                    ],
-                  ),
-                ],
+                    SizedBox(height: MediaQuery.of(context).size.height / 100),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: submitButton(
+                                context: context,
+                                text: "Submit",
+                                buttonWith:
+                                    MediaQuery.of(context).size.width / 2.5)),
+                        GestureDetector(
+                            onTap: () {
+                              uploadQuestionData();
+                            },
+                            child: submitButton(
+                                context: context,
+                                text: "Add Question",
+                                buttonWith:
+                                    MediaQuery.of(context).size.width / 2.5)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
     );
