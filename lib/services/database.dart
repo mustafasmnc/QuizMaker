@@ -23,6 +23,17 @@ class DatabaseService {
   }
 
   getQuizData() async {
-     return await FirebaseFirestore.instance.collection("Quiz").snapshots();
+    return await FirebaseFirestore.instance.collection("Quiz").snapshots();
+  }
+
+  getQuizQuestionAnswer(String quizId) async {
+    return await FirebaseFirestore.instance
+        .collection("Quiz")
+        .doc(quizId)
+        .collection("QuizAndAnswer")
+        .get()
+        .catchError((e) {
+      print(e.toString());
+    }); 
   }
 }
