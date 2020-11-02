@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quizmaker/helper/functions.dart';
 import 'package:quizmaker/services/auth.dart';
 import 'package:quizmaker/views/signin.dart';
 import 'package:quizmaker/widgets/widgets.dart';
+import 'package:random_string/random_string.dart';
 
 import 'home.dart';
 
@@ -14,7 +18,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  String name, email, password;
+  String userName, email, password, userId;
   bool _toggleVisibility = true;
   AuthService authService = new AuthService();
 
@@ -22,10 +26,16 @@ class _SignUpState extends State<SignUp> {
     if (_formKey.currentState.validate()) {
       authService.signUpWithEmailAndPass(email, password).then((value) {
         if (value.substring(0, 5) != 'Error') {
-          HelperFunctions.saveUserLoggedInDetails(isLoggedIn: true);
-          print(value);
+          HelperFunctions.saveUserLoggedInDetails(
+              isLoggedIn: true, userId: value);
+          print("User ID: $value");
+          setUserDataa(value, email, userName);
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomePage(
+                        userId: value,
+                      )));
         } else {
           _scaffoldKey.currentState.showSnackBar(
             SnackBar(
@@ -36,6 +46,35 @@ class _SignUpState extends State<SignUp> {
           );
         }
       });
+
+      // FirebaseFirestore.instance
+      //     .collection("User")
+      //     .snapshots()
+      //     .listen((snapshot) {
+      //   snapshot.docs.forEach((doc)  {debugPrint(doc.data()["userEmail"]);});
+      // });
+    }
+  }
+
+  Future<void> setUserDataa(
+      String userId, String userEmail, String userName) async {
+    Map<String, String> userData = {
+      "userId": userId,
+      "userName": userName,
+      "userEmail": userEmail,
+    };
+    if (userId != null) {
+      try {
+        await FirebaseFirestore.instance
+            .collection("User")
+            .doc(userId)
+            .set(userData)
+            .catchError((e) {
+          print(e.toString());
+        });
+      } catch (e) {
+        print(e.toString());
+      }
     }
   }
 
@@ -76,7 +115,7 @@ class _SignUpState extends State<SignUp> {
                         borderSide: BorderSide()),
                   ),
                   onChanged: (value) {
-                    name = value;
+                    userName = value;
                   },
                 ),
               ),
@@ -136,7 +175,7 @@ class _SignUpState extends State<SignUp> {
                   onTap: () {
                     signUp();
                   },
-                  child: submitButton(context: context,text: "Sign Up"),
+                  child: submitButton(context: context, text: "Sign Up"),
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height / 50),

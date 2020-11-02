@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:quizmaker/models/user_model.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,6 +7,23 @@ class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
   UserModel _userFromFirebaseUser(FirebaseUser user) {
     return user != null ? UserModel(uid: user.uid) : null;
+  }
+
+  Future createUser(String userId, String name,String email,String password) async {
+    Map<String, String> userData = {
+        "userId": userId,
+        "userName": name,
+        "userEmail": email,
+        "userPassword": password
+      };
+    
+    return await FirebaseFirestore.instance
+        .collection("User")
+        .doc(userId)
+        .set(userData)
+        .catchError((e) {
+      print(e.toString());
+    });
   }
 
   Future singInEmailAndPass(String email, String password) async {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quizmaker/models/question_model.dart';
@@ -6,6 +8,11 @@ import 'package:quizmaker/views/result.dart';
 import 'package:quizmaker/widgets/quiz_play_widget.dart';
 import 'package:quizmaker/widgets/widgets.dart';
 
+int _total = 0;
+int _correct = 0;
+int _incorrect = 0;
+int _notAttempted = 0;
+
 class PlayQuiz extends StatefulWidget {
   final String quizId;
 
@@ -13,11 +20,6 @@ class PlayQuiz extends StatefulWidget {
   @override
   _PlayQuizState createState() => _PlayQuizState();
 }
-
-int _total = 0;
-int _correct = 0;
-int _incorrect = 0;
-int _notAttempted = 0;
 
 class _PlayQuizState extends State<PlayQuiz> {
   DatabaseService databaseService = DatabaseService();
@@ -48,7 +50,7 @@ class _PlayQuizState extends State<PlayQuiz> {
     print("Quiz ID: ${widget.quizId}");
     databaseService.getQuizQuestionAnswer(widget.quizId).then((value) {
       questionSnapshot = value;
-      _notAttempted = 0;
+      _notAttempted = questionSnapshot.docs.length;
       _correct = 0;
       _incorrect = 0;
       _total = questionSnapshot.docs.length;
@@ -57,6 +59,60 @@ class _PlayQuizState extends State<PlayQuiz> {
     });
     super.initState();
   }
+
+  Widget topInfo() {
+    return Container(
+      height: 30,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        children: [
+          MyCustomContainer(
+            title: "Total",
+            number: _total,
+            progress: 0.7,
+            size: 30,
+            backgroundColor: Color(0xFF16F4D0),
+            progressColor: Color(0xFF429EA6),
+          ),
+          SizedBox(width: 10),
+          MyCustomContainer(
+            title: "Correct",
+            number: _correct,
+            progress: 0.7,
+            size: 40,
+            backgroundColor: Color(0xFF16F4D0),
+            progressColor: Color(0xFF429EA6),
+          ),
+          SizedBox(width: 10),
+          MyCustomContainer(
+            title: "Incorrect",
+            number: _incorrect,
+            progress: 0.7,
+            size: 40,
+            backgroundColor: Color(0xFF16F4D0),
+            progressColor: Color(0xFF429EA6),
+          ),
+          SizedBox(width: 10),
+          MyCustomContainer(
+            title: "NotAttempted",
+            number: _notAttempted,
+            progress: 0.7,
+            size: 55,
+            backgroundColor: Color(0xFF16F4D0),
+            progressColor: Color(0xFF429EA6),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // @override
+  // void setState(fn) {
+  //   super.setState(fn);
+  //   Timer.periodic(Duration(seconds: 1), (timer) {
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -81,17 +137,23 @@ class _PlayQuizState extends State<PlayQuiz> {
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               child: Column(
                 children: [
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: questionSnapshot.docs.length,
-                      itemBuilder: (context, index) {
-                        return QuizPlaytile(
-                          questionModel: getQuestionModelFromDataSnapshot(
-                              questionSnapshot.docs[index]),
-                          index: index,
-                        );
-                      })
+                  topInfo(),
+                  SizedBox(height: 15),
+                  Container(
+                    height: MediaQuery.of(context).size.height - 150,
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        physics: ClampingScrollPhysics(),
+                        itemCount: questionSnapshot.docs.length,
+                        itemBuilder: (context, index) {
+                          return QuizPlaytile(
+                            questionModel: getQuestionModelFromDataSnapshot(
+                                questionSnapshot.docs[index]),
+                            index: index,
+                          );
+                        }),
+                  )
                 ],
               ),
             ),

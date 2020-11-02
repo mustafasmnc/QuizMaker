@@ -13,7 +13,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  String email, password;
+  String email, password, name;
   bool _toggleVisibility = true;
   AuthService authService = new AuthService();
 
@@ -21,10 +21,10 @@ class _SignInState extends State<SignIn> {
     if (_formKey.currentState.validate()) {
       await authService.singInEmailAndPass(email, password).then((value) {
         if (value.substring(0, 5) != 'Error') {
-          HelperFunctions.saveUserLoggedInDetails(isLoggedIn: true);
-          print(value);
+          HelperFunctions.saveUserLoggedInDetails(isLoggedIn: true, userId: value);
+          print("User Id: "+value);
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
+              context, MaterialPageRoute(builder: (context) => HomePage(userId: value,)));
         } else {
           _scaffoldKey.currentState.showSnackBar(
             SnackBar(
@@ -35,6 +35,11 @@ class _SignInState extends State<SignIn> {
           );
         }
       });
+
+      Map<String, String> userMap = {
+        "userEmail": email,
+        "userPassword": password
+      };
     }
   }
 
@@ -116,7 +121,7 @@ class _SignInState extends State<SignIn> {
                   onTap: () {
                     signIn();
                   },
-                  child: submitButton(context: context,text: "Sign In"),
+                  child: submitButton(context: context, text: "Sign In"),
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height / 60),

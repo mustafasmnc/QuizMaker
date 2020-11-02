@@ -34,6 +34,7 @@ class DatabaseService {
         .get()
         .catchError((e) {
       print(e.toString());
-    }); 
+    });
   }
+
 }

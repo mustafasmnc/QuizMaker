@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:quizmaker/helper/functions.dart';
 import 'package:quizmaker/services/database.dart';
 import 'package:quizmaker/views/create_quiz.dart';
 import 'package:quizmaker/views/play_quiz.dart';
+import 'package:quizmaker/views/signin.dart';
 import 'package:quizmaker/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
+  String userId;
+
+  HomePage({this.userId});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -13,14 +18,45 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Stream quizStream;
   DatabaseService databaseService = DatabaseService();
+  //String userId = "";
+  String userName = "";
+  String userImage =
+      "https://www.talentstree.com/wp-content/uploads/2019/05/avatar.png";
+  // getUserId() {
+  //   HelperFunctions.getUserLoggedInID().then((value) {
+  //     setState(() {
+  //       userId = value;
+  //     });
+  //   });
+  // }
+
+  getUserName() async {
+    await FirebaseFirestore.instance
+        .collection("User")
+        .doc(widget.userId)
+        .get()
+        .then((value) {
+      print(value.data()["userName"]);
+      setState(() {
+        userName = value.data()["userName"];
+      });
+    });
+  }
 
   @override
   void initState() {
+    //getUserId();
     databaseService.getQuizData().then((value) {
       setState(() {
         quizStream = value;
       });
     });
+    HelperFunctions.getUserLoggedInID().then((value) {
+      setState(() {
+        widget.userId = value;
+      });
+    });
+    getUserName();
     super.initState();
   }
 
@@ -33,8 +69,58 @@ class _HomePageState extends State<HomePage> {
         elevation: 0.0,
         brightness: Brightness.light,
         centerTitle: true,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
       ),
       body: quizList(),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            drawerHeader(),
+            ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: 30,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        "Profile",
+                        style: TextStyle(fontSize: 20),
+                      ))
+                ],
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.exit_to_app,
+                    size: 30,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        "Exit",
+                        style: TextStyle(fontSize: 20),
+                      ))
+                ],
+              ),
+              onTap: () {
+                HelperFunctions.saveUserLoggedInDetails(
+                    isLoggedIn: false, userId: null);
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => SignIn()));
+              },
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
@@ -43,6 +129,30 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
+  }
+
+  Widget drawerHeader() {
+    return DrawerHeader(
+        margin: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage('assets/drawer_header_background.png'))),
+        child: Stack(
+          children: [
+            Positioned(
+                bottom: 12,
+                left: 20,
+                child: Text(
+                  userName,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500),
+                ))
+          ],
+        ));
   }
 
   Widget quizList() {
