@@ -2,6 +2,14 @@
 
 A new Flutter project.
 
+## Screenshots
+<img src="https://github.com/mustafasmnc/QuizMaker/blob/main/assets/screenshots/signin.png" alt="signin" title="Screenshot" width="200">|
+<img src="https://github.com/mustafasmnc/QuizMaker/blob/main/assets/screenshots/signup.png" alt="signup" title="Screenshot" width="200">
+<img src="https://github.com/mustafasmnc/QuizMaker/blob/main/assets/screenshots/home.png" alt="home" title="Screenshot" width="200">
+<img src="https://github.com/mustafasmnc/QuizMaker/blob/main/assets/screenshots/create_quiz.png" alt="create quiz" title="Screenshot" width="200">
+<img src="https://github.com/mustafasmnc/QuizMaker/blob/main/assets/screenshots/play_quiz.png" alt="play quiz" title="Screenshot" width="200">
+<img src="https://github.com/mustafasmnc/QuizMaker/blob/main/assets/screenshots/drawer.png" alt="drawer" title="Screenshot" width="200">
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
